@@ -5,6 +5,8 @@
 [Bb]uilds/
 Assets/Plugins/
 Assets/Plugins.meta
+Assets/SteamVR/
+Assets/SteamVR.meta
 Logs/
 
 # Visual Studio cache directory
