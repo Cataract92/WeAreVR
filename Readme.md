@@ -18,7 +18,7 @@ Nutzer skalieren -> Blickwinkel ändern um die Welt zu vergrößer/verkleinern
 * Translation/Skalierung/Rotation
 * Skalierung des Spielers
 
-# Implementierung
+# Implementierung:
 * Translation/Skalierung/Rotation auf Grip-Button
 * Modus auf Trackpad umschalten (Verformen, Erzeugen, Farben?)
 * Post-Filiale-Algorithmus (Patrik implementiert den)
@@ -32,3 +32,14 @@ Nutzer skalieren -> Blickwinkel ändern um die Welt zu vergrößer/verkleinern
 * 2x Einhörner oder 1x Zweihörner
 * Regenbögen
 * Texturen / Farben
+
+# Zeitplan:
+| KW     | Ziel    |
+| --------|---------|
+| 4 | Einleitung/Besprechung/Planung |
+| 5 | Greifen/Rotation (Grip Funktionen), Post-Algorithm |
+| 6 | Ecken Ziehen, Datenstruktur |
+| 7 | Modi auswählen, Zwischenpräsentation orbereiten/halten |
+| 8 | Kanten/Flächen Ziehen |
+| 9 | Ecken hinzufügen, Skalierung (Spieler) |
+| 10 | Ecken Löschen |
