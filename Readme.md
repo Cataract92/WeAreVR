@@ -26,11 +26,7 @@ Nutzer skalieren -> Blickwinkel ändern um die Welt zu vergrößer/verkleinern
 
 # Wishlist:
 * Ecken an Kanten ziehen/erzeugen
-* Ohne Toggle Translation/Skalierung/Rotation
 * Objekte kombinieren
-* Runde Objekte
-* 2x Einhörner oder 1x Zweihörner
-* Regenbögen
 * Texturen / Farben
 
 # Zeitplan:
