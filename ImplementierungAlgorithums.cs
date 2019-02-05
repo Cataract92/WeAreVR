@@ -36,6 +36,12 @@ namespace ConsoleApp2
             EckeErstellen(100, 100, 100);
             EckeErstellen(20, 5, 20);
             Algorithmus1();
+            SetPosition(100, 90, 90);
+            Algorithmus1();
+            SetPosition(200, 200, 200);
+            EckeErstellen(210, 210, 210);
+            SetPosition(0, 0, 0);
+            Algorithmus1();
         }
 
         static void SetPosition (int x, int y, int z)
@@ -56,33 +62,32 @@ namespace ConsoleApp2
             };
 
             a1.Add(p);
-            Console.WriteLine("länge a1: " +a1.Count);
-            Console.ReadKey();
             idEcke++;
         }
 
         static void Algorithmus1()
         {
-            Console.WriteLine("PosX: " + posX);
-            Console.WriteLine("PosY: " + posY);
-            Console.WriteLine("PosZ: " + posZ);
-            Console.ReadKey();
 
             for (int i = 0; i<a1.Count; i++)
             {
-                Console.WriteLine("Element: " + i + " id: " + a1[i].id);
-                Console.WriteLine("Element: " + i + " x: " + a1[i].x);
-                Console.WriteLine("Element: " + i + " y: " + a1[i].y);
-                Console.WriteLine("Element: " + i + " z: " + a1[i].z);
-                Console.ReadKey();
-
                 if (
                     (a1[i].x <= (posX + radius)) && (a1[i].x > (posX - radius)) && 
                     (a1[i].y <= (posY + radius)) && (a1[i].y > (posY - radius)) && 
                     (a1[i].z <= (posZ + radius)) && (a1[i].z > (posZ - radius))
                    )
                 {
+                    int count = 0;
+                    for (int j = 0; j < a2.Count; j++)
+                    {
+                        if (a1[i].id == a2[j].id)
+                        {
+                            count++;
+                        }
+                    }
+                    if (count == 0)
+                    {
                     a2.Add(a1[i]);
+                    }                   
                 }
 
                 else
@@ -91,7 +96,7 @@ namespace ConsoleApp2
                     {
                         if (a1[i].id == a2[j].id)
                         {
-                            a2.Remove(a2[j]);
+                            a2.RemoveAt(j);
                         }
                     }
                 }
@@ -101,7 +106,7 @@ namespace ConsoleApp2
 
         static void Algorithmus2()
         {
-            int supercount = 151;
+            int supercount = (posX+posY+posZ)+(3*radius)+1;
             Ecke highlightEcke = null;
             for (int i = 0; i < a2.Count; i++)
             {
@@ -139,8 +144,8 @@ namespace ConsoleApp2
                     highlightEcke = a2[i];
                 }
             }
-
-            if (a2.Count > 0)
+               
+            if (a2.Count > 0 && highlightEcke!=null)
             {
                 Console.WriteLine(highlightEcke.id);
                 Console.ReadKey();
