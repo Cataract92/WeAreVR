@@ -16,11 +16,20 @@ namespace ConsoleApp2
         public int z { get; set; }
     }
 
+    class Kante
+    {
+        public int id { get; set; }
+        public Ecke p1 { get; set; }
+        public Ecke p2 { get; set; }
+    }
+
     class Program
     {
         public static int idEcke = 0;
+        public static int idKante = 0;
         public static List<Ecke> a1 = new List<Ecke>();
         public static List<Ecke> a2 = new List<Ecke>();
+        public static List<Kante> a3 = new List<Kante>();
 
         public static int posX;
         public static int posY;
@@ -41,6 +50,8 @@ namespace ConsoleApp2
             SetPosition(200, 200, 200);
             EckeErstellen(210, 210, 210);
             SetPosition(0, 0, 0);
+            Algorithmus1();
+            SetPosition(220, 220, 220);
             Algorithmus1();
         }
 
@@ -63,6 +74,49 @@ namespace ConsoleApp2
 
             a1.Add(p);
             idEcke++;
+        }
+
+        static void KanteErstellen(Ecke p1, Ecke p2)
+        {
+            Kante k = new Kante()
+            {
+                id = idKante,
+                p1 = p1,
+                p2 = p2
+            };
+            a3.Add(k);
+            idKante++;
+        }
+
+        static void EckeVerformen(int id, int x, int y, int z)
+        {
+            for (int i = 0; i < a1.Count; i++)
+            {
+                if (a1[i].id == id)
+                {
+                    a1[i].x = x;
+                    a1[i].y = y;
+                    a1[i].z = z;
+                }
+            }
+        }
+
+        static void EckeLoeschen(int id)
+        {
+            for (int i = 0; i < a1.Count; i++)
+            {
+                if (a1[i].id == id)
+                {
+                    for (int j = 0; j < a3.Count; j++)
+                    {
+                        if(a1[i].id == a3[j].p1.id || a1[i].id == a3[j].p2.id)
+                        {
+                            a3.RemoveAt(j);
+                        }
+                    }
+                    a1.RemoveAt(i);
+                }
+            }
         }
 
         static void Algorithmus1()
