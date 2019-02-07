@@ -6,7 +6,6 @@ namespace ConsoleApp2
 
     class Ecke
     {
-//        public int id { get; set; }
         public int x { get; set; }
         public int y { get; set; }
         public int z { get; set; }
@@ -14,15 +13,12 @@ namespace ConsoleApp2
 
     class Kante
     {
-//        public int id { get; set; }
         public Ecke p1 { get; set; }
         public Ecke p2 { get; set; }
     }
 
     class Program
     {
-//        public static int idEcke = 0;
-//        public static int idKante = 0;
         public static List<Ecke> a1 = new List<Ecke>();
         public static List<Ecke> a2 = new List<Ecke>();
         public static List<Kante> a3 = new List<Kante>();
