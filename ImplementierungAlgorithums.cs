@@ -167,8 +167,8 @@ namespace ConsoleApp2
                 int count = 0;
                
                 count += abs(a2[i].x-PosX);
-                count += abs(a2[i].x-PosY);
-                count += abs(a2[i].x-PosZ);
+                count += abs(a2[i].y-PosY);
+                count += abs(a2[i].z-PosZ);
                 
                 if (count < supercount)
                 {
