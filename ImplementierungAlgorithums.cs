@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
 
     class Ecke
     {
-        public int id { get; set; }
+//        public int id { get; set; }
         public int x { get; set; }
         public int y { get; set; }
         public int z { get; set; }
@@ -18,15 +14,15 @@ namespace ConsoleApp2
 
     class Kante
     {
-        public int id { get; set; }
+//        public int id { get; set; }
         public Ecke p1 { get; set; }
         public Ecke p2 { get; set; }
     }
 
     class Program
     {
-        public static int idEcke = 0;
-        public static int idKante = 0;
+//        public static int idEcke = 0;
+//        public static int idKante = 0;
         public static List<Ecke> a1 = new List<Ecke>();
         public static List<Ecke> a2 = new List<Ecke>();
         public static List<Kante> a3 = new List<Kante>();
@@ -39,13 +35,13 @@ namespace ConsoleApp2
 
         static void Main(string[] args)
         {
-            SetPosition(0, 0, 0);
-            EckeErstellen(10, 10, 10);
-            EckeErstellen(10, 5, 10);
-            EckeErstellen(100, 100, 100);
-            EckeErstellen(20, 5, 20);
+            SetPosition(-1, -1, -1);
+            EckeErstellen(1, 1, 2);
+            EckeErstellen(1, 1, 3);
+            EckeErstellen(50, 50, 50);
+            EckeErstellen(150, 100, 100);
             Algorithmus1();
-            SetPosition(100, 90, 90);
+            SetPosition(100, 100, 100);
             Algorithmus1();
             SetPosition(200, 200, 200);
             EckeErstellen(210, 210, 210);
@@ -55,7 +51,7 @@ namespace ConsoleApp2
             Algorithmus1();
         }
 
-        static void SetPosition (int x, int y, int z)
+        static void SetPosition(int x, int y, int z)
         {
             posX = x;
             posY = y;
@@ -66,92 +62,66 @@ namespace ConsoleApp2
         {
             Ecke p = new Ecke()
             {
-                id = idEcke,
                 x = x,
                 y = y,
                 z = z,
             };
 
             a1.Add(p);
-            idEcke++;
         }
 
         static void KanteErstellen(Ecke p1, Ecke p2)
         {
             Kante k = new Kante()
             {
-                id = idKante,
                 p1 = p1,
                 p2 = p2
             };
             a3.Add(k);
-            idKante++;
         }
 
-        static void EckeVerformen(int id, int x, int y, int z)
+        static void EckeVerformen(Ecke p, int x, int y, int z)
         {
-            for (int i = 0; i < a1.Count; i++)
-            {
-                if (a1[i].id == id)
-                {
-                    a1[i].x = x;
-                    a1[i].y = y;
-                    a1[i].z = z;
-                }
-            }
+            p.x = x;
+            p.y = y;
+            p.z = z;
         }
 
-        static void EckeLoeschen(int id)
+        static void EckeLoeschen(Ecke p)
         {
-            for (int i = 0; i < a1.Count; i++)
+            foreach(var k in a3)
             {
-                if (a1[i].id == id)
+                if (k.p1 == p || k.p2 == p)
                 {
-                    for (int j = 0; j < a3.Count; j++)
-                    {
-                        if(a1[i].id == a3[j].p1.id || a1[i].id == a3[j].p2.id)
-                        {
-                            a3.RemoveAt(j);
-                        }
-                    }
-                    a1.RemoveAt(i);
+                    a3.Remove(k);
                 }
             }
+
+            a1.Remove(p);
         }
 
         static void Algorithmus1()
         {
 
-            for (int i = 0; i<a1.Count; i++)
+            foreach (var p in a1)
             {
                 if (
-                    (a1[i].x <= (posX + radius)) && (a1[i].x > (posX - radius)) && 
-                    (a1[i].y <= (posY + radius)) && (a1[i].y > (posY - radius)) && 
-                    (a1[i].z <= (posZ + radius)) && (a1[i].z > (posZ - radius))
+                    (p.x <= (posX + radius)) && (p.x > (posX - radius)) &&
+                    (p.y <= (posY + radius)) && (p.y > (posY - radius)) &&
+                    (p.z <= (posZ + radius)) && (p.z > (posZ - radius))
                    )
                 {
-                    int count = 0;
-                    for (int j = 0; j < a2.Count; j++)
+                    if (!a2.Contains(p))
                     {
-                        if (a1[i].id == a2[j].id)
-                        {
-                            count++;
-                        }
+                        a2.Add(p);
                     }
-                    if (count == 0)
-                    {
-                    a2.Add(a1[i]);
-                    }                   
                 }
 
                 else
                 {
-                    for(int j = 0; j<a2.Count; j++)
+                    if (a2.Contains(p))
                     {
-                        if (a1[i].id == a2[j].id)
-                        {
-                            a2.RemoveAt(j);
-                        }
+                        a2.Remove(p);
                     }
                 }
             }
@@ -160,26 +130,26 @@ namespace ConsoleApp2
 
         static void Algorithmus2()
         {
-            int supercount = (posX+posY+posZ)+(3*radius)+1;
+            int supercount = (posX + posY + posZ) + (3 * radius) + 1;
             Ecke highlightEcke = null;
-            for (int i = 0; i < a2.Count; i++)
-            {
-                int count = 0;
-               
-                count += abs(a2[i].x-PosX);
-                count += abs(a2[i].y-PosY);
-                count += abs(a2[i].z-PosZ);
-                
-                if (count < supercount)
+
+            foreach(var p in a2)
                 {
-                    supercount = count;
-                    highlightEcke = a2[i];
+                    int count = 0;
+                    count += Math.Abs(p.x - posX);
+                    count += Math.Abs(p.y - posY);
+                    count += Math.Abs(p.z - posZ);
+
+                    if (count < supercount)
+                    {
+                        supercount = count;
+                        highlightEcke = p;
+                    }
                 }
-            }
-               
-            if (a2.Count > 0 && highlightEcke!=null)
+
+            if (a2.Count > 0 && highlightEcke != null)
             {
-                Console.WriteLine(highlightEcke.id);
+                Console.WriteLine(highlightEcke.x);
                 Console.ReadKey();
             }
             else
