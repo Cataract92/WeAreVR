@@ -165,15 +165,9 @@ namespace ConsoleApp2
             for (int i = 0; i < a2.Count; i++)
             {
                 int count = 0;
-                if (a2[i].x > 0)
-                {
-                    count += a2[i].x;
-                }
-                else
-                {
-                    count += (a2[i].x) * -1;
-                }
-
+               
+                count += abs(a2[i].x-PosX;
+            
                 if (a2[i].y > 0)
                 {
                     count += a2[i].y;
