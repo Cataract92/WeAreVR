@@ -166,26 +166,10 @@ namespace ConsoleApp2
             {
                 int count = 0;
                
-                count += abs(a2[i].x-PosX;
-            
-                if (a2[i].y > 0)
-                {
-                    count += a2[i].y;
-                }
-                else
-                {
-                    count += (a2[i].y) * -1;
-                }
-
-                if (a2[i].z > 0)
-                {
-                    count += a2[i].z;
-                }
-                else
-                {
-                    count += (a2[i].z) * -1;
-                }
-
+                count += abs(a2[i].x-PosX);
+                count += abs(a2[i].x-PosY);
+                count += abs(a2[i].x-PosZ);
+                
                 if (count < supercount)
                 {
                     supercount = count;
