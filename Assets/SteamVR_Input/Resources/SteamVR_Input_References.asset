@@ -29,6 +29,7 @@ MonoBehaviour:
   - __actions_default_in_SkeletonLeftHand
   - __actions_default_in_SkeletonRightHand
   - __actions_default_in_Squeeze
+  - __actions_default_in_Trigger
   - __actions_default_out_Haptic
   - __actions_platformer_in_Move
   - __actions_platformer_in_Jump
@@ -45,6 +46,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 550a500274a720444a55f63a61f84848, type: 2}
   - {fileID: 11400000, guid: 8c301483af4b2484dad318796a94aabd, type: 2}
   - {fileID: 11400000, guid: 70694fbabc0ac15449f3c5cf1d47d998, type: 2}
+  - {fileID: 11400000, guid: a1df3c5bdfad3f841a29d44cf41671b5, type: 2}
   - {fileID: 11400000, guid: 74b5783bcdd3b124c882fb0117ff253f, type: 2}
   - {fileID: 11400000, guid: 710fd0cfcc8338b4b90a4999f780ce75, type: 2}
   - {fileID: 11400000, guid: e31b94ce16cfa62469485535d46846c4, type: 2}

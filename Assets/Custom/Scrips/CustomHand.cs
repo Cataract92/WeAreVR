@@ -20,6 +20,13 @@ namespace Valve.VR.InteractionSystem
     //-------------------------------------------------------------------------
     public class CustomHand : Hand
     {
+
+        [SteamVR_DefaultAction("Trigger")]
+        public SteamVR_Action_Boolean triggerAction;
+
+        [HideInInspector]
+        public ManipulationTool.ToolType CurrentToolType = ManipulationTool.ToolType.HAND;
+
         private new void FixedUpdate()
         {
             if (currentAttachedObject != null)
@@ -41,16 +48,6 @@ namespace Valve.VR.InteractionSystem
             }
         }
 
-
-        new protected virtual IEnumerator Start()
-        {
-            var ret = base.Start();
-
-            //InvokeRepeating("Algorithmus1",0.0f,0.5f);
-
-            return ret;
-        }
-
         new protected virtual void Update()
         {
             base.Update();
@@ -58,19 +55,21 @@ namespace Valve.VR.InteractionSystem
             Algorithmus1();
             Algorithmus2();
 
-            if (grabPinchAction.GetStateDown(handType))
+            if (triggerAction.GetStateDown(handType))
             {
                 if (MainObject.Highlight != null && currentAttachedObject == null)
                 {
-                    AttachObject(MainObject.Highlight.gameObject, GrabTypes.Pinch);
+                    AttachObject(MainObject.Highlight.gameObject,GrabTypes.Trigger);
+                    MainObject.Highlight.IsAttached = true;
                 }
             }
 
-            if (grabPinchAction.GetStateUp(handType))
+            if (triggerAction.GetStateUp(handType))
             {
                 if (MainObject.Highlight != null && currentAttachedObject != null)
                 {
                     DetachObject(MainObject.Highlight.gameObject, true);
+                    MainObject.Highlight.IsAttached = false;
                 }
             }
         }

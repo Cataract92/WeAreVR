@@ -17,12 +17,14 @@ public class CustomMesh
             Position = position;
             Mesh = mesh;
 
+            
             VertexDummy = ((GameObject)Object.Instantiate(Resources.Load("Vertex"))).GetComponent<VertexDummy>();
 
             VertexDummy.transform.parent = Mesh.MainObject.transform;
 
             VertexDummy.Vertex = this;
             VertexDummy.transform.localPosition = position;
+            
 
             Mesh.Vertices.Add(this);
 
