@@ -52,13 +52,45 @@ namespace Valve.VR.InteractionSystem
         {
             base.Update();
 
-            Algorithmus1();
+            List<VertexDummy> dummies = new List<VertexDummy>();
+
+
+            switch (CurrentToolType)
+            {
+                case ManipulationTool.ToolType.HAND:
+                {
+                    foreach (var mainObject in GameObject.FindObjectsOfType<MainObject>())
+                    {
+                        foreach (var vertex in mainObject.Mesh.Vertices)
+                        {
+                            dummies.Add(vertex.VertexDummy);
+                        }
+                    }
+
+                    break;
+                }
+                case ManipulationTool.ToolType.PLUNGER:
+                {
+                    foreach (var mainObject in GameObject.FindObjectsOfType<MainObject>())
+                    {
+                        foreach (var face in mainObject.Mesh.Faces)
+                        {
+                            dummies.Add(face.FaceDummy);
+                        }
+                    }
+
+                    break;
+                    }
+            }
+
+            Algorithmus1(dummies);
             Algorithmus2();
 
             if (triggerAction.GetStateDown(handType))
             {
                 if (MainObject.Highlight != null && currentAttachedObject == null)
                 {
+                    MainObject.Highlight.InitialFaceRotation = Quaternion.FromToRotation( transform.forward, -MainObject.Highlight.transform.forward);
                     AttachObject(MainObject.Highlight.gameObject,GrabTypes.Trigger);
                     MainObject.Highlight.IsAttached = true;
                 }
@@ -69,53 +101,31 @@ namespace Valve.VR.InteractionSystem
                 if (MainObject.Highlight != null && currentAttachedObject != null)
                 {
                     DetachObject(MainObject.Highlight.gameObject, true);
+                    MainObject.Highlight.transform.rotation *= Quaternion.Inverse(MainObject.Highlight.InitialFaceRotation);
                     MainObject.Highlight.IsAttached = false;
                 }
             }
         }
         
-
         private List<VertexDummy> a2 = new List<VertexDummy>();
-        private void Algorithmus1()
+
+        private void Algorithmus1(List<VertexDummy> dummies)
         {
-            foreach (var mainObject in GameObject.FindObjectsOfType<MainObject>())
-            {
-                foreach (var vertex in mainObject.Mesh.Vertices)
+                foreach (var dummy in dummies)
                 {
-                    var vertexdummy = vertex.VertexDummy;
-
-
-                    /*
-                    if (vertex.Position.x <= (transform.position.x + MainObject.Radius) && vertex.Position.x >
-                                                                                        (transform.position.x -
-                                                                                         MainObject.Radius)
-                                                                                        && vertex.Position.y <=
-                                                                                        (transform.position.y +
-                                                                                         MainObject.Radius) &&
-                                                                                        vertex.Position.y >
-                                                                                        (transform.position.y -
-                                                                                         MainObject.Radius)
-                                                                                        && vertex.Position.z <=
-                                                                                        (transform.position.z +
-                                                                                         MainObject.Radius) &&
-                                                                                        vertex.Position.z >
-                                                                                        (transform.position.z -
-                                                                                         MainObject.Radius))
-    */
-                    var vertexPosition = vertexdummy.GetComponent<Transform>().position;
+                    var vertexPosition = dummy.GetComponent<Transform>().position;
 
                     if ( Math.Abs(vertexPosition.x - transform.position.x) <= MainObject.Radius && Math.Abs(vertexPosition.y - transform.position.y) <= MainObject.Radius && Math.Abs(vertexPosition.z - transform.position.z) <= MainObject.Radius)
                     {
-                        if (!a2.Contains(vertexdummy))
-                            a2.Add(vertexdummy);
+                        if (!a2.Contains(dummy))
+                            a2.Add(dummy);
                     }
                     else
                     {
-                        if (a2.Contains(vertexdummy))
-                            a2.Remove(vertexdummy);
+                        if (a2.Contains(dummy))
+                            a2.Remove(dummy);
                     }
                 }
-            }
         }
 
 

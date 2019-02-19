@@ -40,7 +40,7 @@ public class MainObject : MonoBehaviour
             Destroy(GetComponent<MeshCollider>());
             gameObject.AddComponent<MeshCollider>();
         //}
-        
+
     }
 
     private IEnumerator Countdown()

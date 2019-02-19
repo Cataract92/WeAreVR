@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Schema;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class CustomMesh
             Mesh = mesh;
 
             
-            VertexDummy = ((GameObject)Object.Instantiate(Resources.Load("Vertex"))).GetComponent<VertexDummy>();
+            VertexDummy = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Vertex"))).GetComponent<VertexDummy>();
 
             VertexDummy.transform.parent = Mesh.MainObject.transform;
 
@@ -78,6 +79,11 @@ public class CustomMesh
         public Vertex[] Vertices = new Vertex[3];
         public CustomMesh Mesh;
         public Material Material;
+        public VertexDummy FaceDummy;
+        public Vector3 Normal;
+
+        public Dictionary<Vertex,Vector3> InitialVectors = new Dictionary<Vertex, Vector3>();
+        public Quaternion Rotation = new Quaternion();
 
         public Face(CustomMesh mesh, Vertex[] vertices)
         {
@@ -86,9 +92,17 @@ public class CustomMesh
             foreach (var vertex in Vertices)
             {
                 vertex.Faces.Add(this);
+                InitialVectors.Add(vertex,new Vector3());
             }
 
             Mesh.Faces.Add(this);
+
+            FaceDummy = ((GameObject)UnityEngine.Object.Instantiate(Resources.Load("Vertex"))).GetComponent<VertexDummy>();
+            FaceDummy.transform.parent = mesh.MainObject.transform;
+            FaceDummy.Face = this;
+
+            calculateDummyPosition();
+
             Mesh.NeedsRedraw = true;
         }
 
@@ -111,6 +125,22 @@ public class CustomMesh
             new Vertex(position, Mesh, this);
 
             Mesh.NeedsRedraw = true;
+        }
+
+        public void calculateDummyPosition()
+        {
+            FaceDummy.transform.localPosition =
+                (Vertices[0].Position + Vertices[1].Position + Vertices[2].Position) / 3f;
+
+            foreach (var vertex in Vertices)
+            {
+                InitialVectors[vertex] = Quaternion.Inverse(Mesh.MainObject.transform.rotation) * ( vertex.VertexDummy.transform.position - FaceDummy.transform.position);
+            }
+
+            Normal = Vector3.Cross(Vertices[1].VertexDummy.transform.position - Vertices[0].VertexDummy.transform.position, Vertices[2].VertexDummy.transform.position - Vertices[0].VertexDummy.transform.position);
+            FaceDummy.transform.rotation *= Quaternion.FromToRotation(FaceDummy.transform.forward, Normal);
+
+            Rotation = FaceDummy.transform.rotation;
         }
     }
 
