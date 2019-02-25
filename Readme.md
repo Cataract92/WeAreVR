@@ -1,3 +1,8 @@
+# Bugs
+* Shaders
+* Hand Modell Position beim greifen
+* Flippen beim Plunger
+
 Requirements: SteamVR vom AssetStore
 
 
