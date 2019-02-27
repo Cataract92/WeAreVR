@@ -35,6 +35,7 @@ Nutzer skalieren -> Blickwinkel ändern um die Welt zu vergrößer/verkleinern
 * Ecken an Kanten ziehen/erzeugen
 * Objekte kombinieren
 * Texturen / Farben
+* Parallele Flächen wieder zusammen fügen, und ganze Flächen ziehen
 
 # Zeitplan:
 | KW     | Ziel    |
