@@ -7,7 +7,7 @@ Probleme die aufgetreten sind bei der Entwicklung
 * Gingen zurück auf die Ursprungsversion und haben die änderungen gedämpft
 * Methode set hat nicht funktioniert, führte dazu dass wir anderes im Verdacht hatten
 
-## Rechnung Varianten
+## Formel Varianten
 * Player.transform.localscale \*= newDistance / initialdistance
 * Player.transform.localscale \*= newDistance / (initialdistance \* Player.transform.localScale)
 * Player.transform.localscale \*= newDistance / initialdistance
@@ -31,3 +31,34 @@ Did some things, changed some stuff
 # Objekt Skalieren
 
 Während dem Skalieren wurden die Positionen der Ecken des Mesches falsch berechnet, da die Skalierung des Objekts nicht brücksichtigt wurde
+
+# Ecken Erzeugen
+
+Ecken wurden 180° von Spieler weg erzeugt
+
+Das blaue VertexDummy auf der Fläche wurde gelöscht und alles hing sich auf -> 
+1. 
+1. Umfärben auf Rot und weiter verwenden als Ecken DummyVertex
+
+
+1. Man kann Ecken erzeugen, sie werden aber nicht anschließend an die Hand gebunden um gezogen zu werden
+2. Dann haben wir das Ziehen der Ecken kaputt gemacht
+3.
+
+# Neue Ecken Kreieren
+
+Tool wurde hinzugefügt, war zu groß, wurde verkleinert
+
+Tool ist nicht richtig in der Hand erschienen, hat Fehler geworfen
+
+# Neue Objekte
+
+Größe war scheiße
+
+Interagieren mit Objekten hat andere Objekte kaputt gemacht
+- Ursach war im Erzeugen der neuen Ecken und wie die Objekte gesucht werden 
+
+
+
+
+
