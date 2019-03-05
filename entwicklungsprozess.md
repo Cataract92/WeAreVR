@@ -58,6 +58,22 @@ Größe war scheiße
 Interagieren mit Objekten hat andere Objekte kaputt gemacht
 - Ursach war im Erzeugen der neuen Ecken und wie die Objekte gesucht werden 
 
+# Ecken Löschen
+
+Bei der uhrsrünglichen Idee(2d Objekt Punkt in Mitte, von einem Punkt an alle anderen, Faces Ziehen): Zu viele Faces wurden gezogen, auch mitten durch das Objekt durch.
+
+Lösungsansatz: Ein rekursiver Algorithmus der alle Möglichkeiten nach gültigkeit überprüft, bis er ein valides Mesh findet.
+
+Kanten wurden nicht immer richtig rum gemahlt
+Ansätze:
+1. Normal Ray Vergleich
+1. Schnitte Zählen (ob gerade oder ungerade)
+
+Lösung: von beiden Seiten zeichnen - Dunkelheit hat gesiegt also nvm
+
+# Objekte Löschen
+
+
 
 
 
