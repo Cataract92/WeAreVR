@@ -104,3 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c393f2dd4bd0b042b3d0daf878ad768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  VertexMaterial: {fileID: 2100000, guid: 7c2ca730caa90a34098b63ddf46d8483, type: 2}
+  FaceMaterial: {fileID: 2100000, guid: de29e3f99653dd247b97b35181989291, type: 2}
+  InitialFaceRotation: {x: 0, y: 0, z: 0, w: 0}
+  IsAttached: 0

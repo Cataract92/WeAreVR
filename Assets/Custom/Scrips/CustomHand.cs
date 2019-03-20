@@ -21,11 +21,33 @@ namespace Valve.VR.InteractionSystem
     public class CustomHand : Hand
     {
 
-        [SteamVR_DefaultAction("Trigger")]
-        public SteamVR_Action_Boolean triggerAction;
+        public SteamVR_Action_Boolean triggerAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Trigger");
 
-        [HideInInspector]
         public ManipulationTool.ToolType CurrentToolType = ManipulationTool.ToolType.HAND;
+
+        private VertexDummy _highlight;
+        public VertexDummy Highlight
+        {
+            get { return _highlight; }
+            set
+            {
+                if (_highlight != null)
+                    _highlight.UndoHighlight();
+                _highlight = value;
+                if (_highlight != null)
+                    _highlight.DoHighlight();
+            }
+        }
+
+
+        private Transform _playerTransform;
+
+        protected virtual new IEnumerator Start()
+        {
+            var ret = base.Start();
+            _playerTransform = GameObject.Find("Player").transform;
+            return ret;
+        }
 
         private new void FixedUpdate()
         {
@@ -52,19 +74,94 @@ namespace Valve.VR.InteractionSystem
         {
             base.Update();
 
-            List<VertexDummy> dummies = new List<VertexDummy>();
+            if (triggerAction.GetStateDown(handType))
+            {
+                if (Highlight != null && currentAttachedObject == null)
+                {
+                    if (CurrentToolType == ManipulationTool.ToolType.HAND || CurrentToolType == ManipulationTool.ToolType.PLUNGER)
+                    {
+                        if (Highlight.Vertex != null || CurrentToolType == ManipulationTool.ToolType.PLUNGER)
+                        {
+                            Highlight.InitialFaceRotation = Quaternion.Inverse(transform.rotation);
+                            AttachObject(Highlight.gameObject, GrabTypes.Trigger);
+                            Highlight.IsAttached = true;
+                        }
+                        else
+                        {
+                            var v = new CustomMesh.Vertex(Highlight.transform.localPosition, Highlight.Face.Mesh, Highlight.Face, Highlight);
+                            AttachObject(v.VertexDummy.gameObject, GrabTypes.Trigger);
+                            Highlight.IsAttached = true;
+                        }
 
+                    }
+
+                    if (CurrentToolType == ManipulationTool.ToolType.ERASER)
+                    {
+                        if (Highlight.Face != null)
+                        {
+                            Destroy(Highlight.Face.Mesh.MainObject);
+                        }
+                        else
+                        {
+                            Highlight.Vertex.Remove();
+
+                        }
+                        Highlight = null;
+                    }
+                }
+            }
+
+            if (triggerAction.GetStateUp(handType))
+            {
+                if (CurrentToolType == ManipulationTool.ToolType.CUBE)
+                {
+                    ManipulationTool go = null;
+                    var objects = GameObject.FindObjectsOfType<ManipulationTool>();
+                    for (int i = 0; i < objects.Length; i++)
+                    {
+                        if (objects[i].Type == ManipulationTool.ToolType.CUBE)
+                            go = objects[i];
+                    }
+                    var o = GameObject.Instantiate(go.MainObjectPrefab);
+
+                    o.transform.position = transform.position;
+                    o.transform.rotation = transform.rotation;
+                    o.transform.localScale = FindObjectOfType<CustomPlayer>().transform.localScale * 0.1f;
+
+                }
+                else if (Highlight != null && currentAttachedObject != null)
+                {
+                    DetachObject(Highlight.gameObject, true);
+                    Highlight.transform.rotation *= Quaternion.Inverse(Highlight.InitialFaceRotation);
+                    Highlight.IsAttached = false;
+                }
+            }
+
+
+            if (currentAttachedObject != null)
+                return;
+
+            List<VertexDummy> dummies = new List<VertexDummy>();
 
             switch (CurrentToolType)
             {
+                case ManipulationTool.ToolType.ERASER:
                 case ManipulationTool.ToolType.HAND:
                 {
                     foreach (var mainObject in GameObject.FindObjectsOfType<MainObject>())
                     {
                         foreach (var vertex in mainObject.Mesh.Vertices)
                         {
-                            dummies.Add(vertex.VertexDummy);
+                            if(vertex != null && vertex.VertexDummy != null)
+                                dummies.Add(vertex.VertexDummy);
                         }
+                        
+                        foreach (var face in mainObject.Mesh.Faces)
+                        {
+                            if (face != null && face.FaceDummy != null)
+                                dummies.Add(face.FaceDummy);
+                        }
+                        
                     }
 
                     break;
@@ -75,66 +172,54 @@ namespace Valve.VR.InteractionSystem
                     {
                         foreach (var face in mainObject.Mesh.Faces)
                         {
-                            dummies.Add(face.FaceDummy);
+                            if (face != null && face.FaceDummy != null)
+                                dummies.Add(face.FaceDummy);
                         }
-                    }
 
+                            foreach (var edge in mainObject.Mesh.Edges)
+                            {
+                                if (edge != null && edge.EdgeDummy != null)
+                                    dummies.Add(edge.EdgeDummy);
+                            }
+                        }
                     break;
-                    }
-            }
-
-            Algorithmus1(dummies);
-            Algorithmus2();
-
-            if (triggerAction.GetStateDown(handType))
-            {
-                if (MainObject.Highlight != null && currentAttachedObject == null)
-                {
-                    MainObject.Highlight.InitialFaceRotation = Quaternion.FromToRotation( transform.forward, -MainObject.Highlight.transform.forward);
-                    AttachObject(MainObject.Highlight.gameObject,GrabTypes.Trigger);
-                    MainObject.Highlight.IsAttached = true;
                 }
             }
 
-            if (triggerAction.GetStateUp(handType))
-            {
-                if (MainObject.Highlight != null && currentAttachedObject != null)
-                {
-                    DetachObject(MainObject.Highlight.gameObject, true);
-                    MainObject.Highlight.transform.rotation *= Quaternion.Inverse(MainObject.Highlight.InitialFaceRotation);
-                    MainObject.Highlight.IsAttached = false;
-                }
-            }
+            Algorithmus2(Algorithmus1(dummies));
+
+            
         }
         
-        private List<VertexDummy> a2 = new List<VertexDummy>();
 
-        private void Algorithmus1(List<VertexDummy> dummies)
+        private List<VertexDummy> Algorithmus1(List<VertexDummy> dummies)
         {
-                foreach (var dummy in dummies)
-                {
-                    var vertexPosition = dummy.GetComponent<Transform>().position;
+            List<VertexDummy> list = new List<VertexDummy>();
+            foreach (var dummy in dummies)
+            {
+                var vertexPosition = dummy.GetComponent<Transform>().position;
 
-                    if ( Math.Abs(vertexPosition.x - transform.position.x) <= MainObject.Radius && Math.Abs(vertexPosition.y - transform.position.y) <= MainObject.Radius && Math.Abs(vertexPosition.z - transform.position.z) <= MainObject.Radius)
-                    {
-                        if (!a2.Contains(dummy))
-                            a2.Add(dummy);
-                    }
-                    else
-                    {
-                        if (a2.Contains(dummy))
-                            a2.Remove(dummy);
-                    }
+                if ( Math.Abs(vertexPosition.x - transform.position.x) <= MainObject.Radius * _playerTransform.localScale.x && Math.Abs(vertexPosition.y - transform.position.y) <= MainObject.Radius * _playerTransform.localScale.x && Math.Abs(vertexPosition.z - transform.position.z) <= MainObject.Radius * _playerTransform.localScale.x)
+                {
+                    if (!list.Contains(dummy))
+                        list.Add(dummy);
                 }
+                else
+                {
+                    if (list.Contains(dummy))
+                        list.Remove(dummy);
+                }
+            }
+            return list;
         }
 
 
-        private void Algorithmus2()
+        private void Algorithmus2(List<VertexDummy> list)
         {
             float supercount = (Math.Abs(transform.position.x) + Math.Abs(transform.position.y) + Math.Abs(transform.position.z)) +
-                               (3 * MainObject.Radius) + 1;
+                               (3 * MainObject.Radius * _playerTransform.localScale.x) + 1;
 
-            foreach (var dummy in a2)
+            foreach (var dummy in list)
             {
                 float count = 0f;
                 count += Math.Abs(dummy.transform.position.x - transform.position.x);
@@ -144,12 +229,12 @@ namespace Valve.VR.InteractionSystem
                 if (count < supercount)
                 {
                     supercount = count;
-                    MainObject.Highlight = dummy;
+                    Highlight = dummy;
                 }
             }
 
-            if (a2.Count == 0)
-                MainObject.Highlight = null;
+            if (list.Count == 0)
+                Highlight = null;
         }
     }
  }

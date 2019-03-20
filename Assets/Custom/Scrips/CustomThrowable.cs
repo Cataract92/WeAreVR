@@ -143,6 +143,11 @@ namespace Valve.VR.InteractionSystem
                 hand.AttachObject(gameObject, startingGrabType, attachmentFlags, attachmentOffset);
                 hand.HideGrabHint();
             }
+
+            if (((CustomHand)hand).triggerAction.GetStateUp(hand.handType) && ((CustomHand)hand).CurrentToolType == ManipulationTool.ToolType.BOMB)
+            {
+                Destroy(gameObject);
+            }
         }
 
         protected virtual void FixedUpdate()
@@ -310,10 +315,10 @@ namespace Valve.VR.InteractionSystem
 
                 GetReleaseVelocities(hand, out velocity, out angularVelocity);
 
-                //rigidbody.velocity = velocity;
-                //rigidbody.angularVelocity = angularVelocity;
-                rigidbody.velocity = new Vector3();
-                rigidbody.angularVelocity = new Vector3();
+                rigidbody.velocity = velocity;
+                rigidbody.angularVelocity = angularVelocity;
+                //rigidbody.velocity = new Vector3();
+                //rigidbody.angularVelocity = new Vector3();
             }
             
         }

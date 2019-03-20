@@ -7,19 +7,7 @@ public class MainObject : MonoBehaviour
 {
     public static float Radius = 0.15f;
 
-    private static VertexDummy _highlight;
-    public static VertexDummy Highlight
-    {
-        get { return _highlight; }
-        set
-        {
-            if (_highlight != null)
-                _highlight.UndoHighlight();
-            _highlight = value;
-            if (_highlight != null)
-                _highlight.DoHighlight();
-        }
-    }
+
     public CustomMesh Mesh;
 
     // Start is called before the first frame update
@@ -27,19 +15,21 @@ public class MainObject : MonoBehaviour
     {
         Mesh = new CustomMesh(this);
 
-        StartCoroutine(Countdown());
+       //StartCoroutine(Countdown());
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
+        
         if (Mesh.NeedsRedraw)
-        {*/
-        GetComponent<MeshFilter>().mesh = Mesh.ToMesh();
+        {
+        
+            GetComponent<MeshFilter>().mesh = Mesh.ToMesh();
             Destroy(GetComponent<MeshCollider>());
             gameObject.AddComponent<MeshCollider>();
-        //}
+            
+        }
 
     }
 
